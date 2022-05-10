@@ -1,42 +1,47 @@
 const Sequelize = require("sequelize");
 const db = require("../config/database");
+const Department = require("../models/Department");
 
 const Employee = db.define(
-	"Employee",
+	"employees",
 	{
-		employee_id: {
-			type: Sequelize.NUMBER,
+		employeeId: {
+			field: "employee_id",
+			type: Sequelize.INTEGER,
+			primaryKey: true,
 		},
-		first_name: {
+		firstName: {
+			field: "first_name",
 			type: Sequelize.STRING,
 		},
-		last_name: {
+		lastName: {
+			field: "last_name",
 			type: Sequelize.STRING,
+		},
+		jobId: {
+			field: "job_id",
+			type: Sequelize.INTEGER,
 		},
 		email: {
+			field: "email",
 			type: Sequelize.STRING,
 		},
-		phone_number: {
-			type: Sequelize.STRING,
-		},
-		hire_date: {
-			type: Sequelize.STRING,
-		},
-		job_id: {
-			type: Sequelize.STRING,
-		},
-		salary: {
-			type: Sequelize.STRING,
-		},
-		manager_id: {
-			type: Sequelize.STRING,
-		},
-		department_id: {
-			type: Sequelize.STRING,
+		departmentId: {
+			field: "department_id",
+			type: Sequelize.INTEGER,
+			references: {
+				model: "departments",
+				key: "department_id",
+			},
 		},
 	},
 	{
-		tableName: "employees",
+		timestamps: false,
+		associate: (model) => {
+			Employee.belongsTo(model.Department, {
+				foreignKey: "department_id",
+			});
+		},
 	}
 );
 
