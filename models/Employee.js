@@ -1,14 +1,15 @@
 const Sequelize = require("sequelize");
 const db = require("../config/database");
-const Department = require("../models/Department");
+const DepartmentModel = require("./Department");
 
-const Employee = db.define(
-	"employees",
+const EmployeeModel = db.define(
+	"Employees",
 	{
 		employeeId: {
 			field: "employee_id",
 			type: Sequelize.INTEGER,
 			primaryKey: true,
+			autoIncrement: true,
 		},
 		firstName: {
 			field: "first_name",
@@ -29,20 +30,16 @@ const Employee = db.define(
 		departmentId: {
 			field: "department_id",
 			type: Sequelize.INTEGER,
-			references: {
-				model: "departments",
-				key: "department_id",
-			},
+			// references: {
+			// 	model: DepartmentModel,
+			// 	key: "departmentId",
+			// },
 		},
 	},
 	{
 		timestamps: false,
-		associate: (model) => {
-			Employee.belongsTo(model.Department, {
-				foreignKey: "department_id",
-			});
-		},
+		tableName: "employees",
 	}
 );
 
-module.exports = Employee;
+module.exports = EmployeeModel;

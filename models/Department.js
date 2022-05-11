@@ -1,8 +1,8 @@
 const Sequelize = require("sequelize");
 const db = require("../config/database");
 
-const Department = db.define(
-	"department",
+const DepartmentModel = db.define(
+	"Department",
 	{
 		departmentId: {
 			field: "department_id",
@@ -21,12 +21,7 @@ const Department = db.define(
 	{
 		timestamps: false,
 		tableName: "departments",
-		associate: (model) => {
-			Department.hasMany(model.employees, {
-				foreignKey: "department_id",
-			});
-		},
 	}
 );
 
-module.exports = Department;
+module.exports = DepartmentModel;

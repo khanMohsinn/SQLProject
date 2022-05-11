@@ -1,39 +1,42 @@
 const db = require("../config/database");
 const express = require("express");
 const router = express.Router();
-const Employee = require("../models/Employee");
-const Department = require("../models/Department");
+const EmployeeModel = require("../models/Employee");
+const DepartmentModel = require("../models/Department");
 const Sequelize = require("sequelize");
 
 router.get("/", async (req, res) => {
 	try {
 		await db.authenticate();
 		console.log("Connection has been established successfully.");
-		Employee.belongsTo(Department, {
+		EmployeeModel.belongsTo(DepartmentModel, {
 			foreignKey: "department_id",
 		});
-		Department.hasMany(Employee, {
+		DepartmentModel.hasMany(EmployeeModel, {
 			foreignKey: "department_id",
 		});
-		const employee = await Department.findAll({
-			attributes: ["department_name"],
+		const query = await DepartmentModel.findAll({
+			where: {
+				department_id: 3,
+			},
+			attributes: ["departmentName"],
+
 			include: {
-				model: Employee,
+				model: EmployeeModel,
 				attributes: [
+					"jobId",
 					["department_id", "DEPARTMENT ID"],
 					["last_name", "EMPLOYEE NAME"],
 					["hire_date", "START DATE"],
 					["salary", "SALARY"],
 					[Sequelize.literal("salary*12"), "ANNUAL SALARY"],
 				],
-			},
-			where: {
-				department_id: 3,
+				required: true,
 			},
 		});
-		res.status(200).send(employee);
+		res.status(200).send(query);
 	} catch (err) {
-		console.error("Unable to connect to the database:", err);
+		console.error("Unable to connect to the database, ERROR : ", err);
 		res.status(400).json(err);
 	}
 });
