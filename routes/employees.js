@@ -31,8 +31,8 @@ router.get("/", async (req, res) => {
 					["salary", "SALARY"],
 					[Sequelize.literal("salary*12"), "ANNUAL SALARY"],
 				],
-				required: true,
 			},
+			// required: true,
 		});
 		res.status(200).send(query);
 	} catch (err) {
